@@ -3,3 +3,4 @@ dlib
 face-recognition
 numpy
 opencv-python
+pytz
