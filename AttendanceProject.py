@@ -11,13 +11,6 @@ images = []
 classNames = []
 myList = os.listdir(path)
 
-# """ This is Attendance Time """
-pytz.timezone('Asia/Jakarta')
-now = datetime.now()
-tgl = now.strftime('%x')
-dtString = now.strftime('%X')
-hadir = now.replace(hour=7,minute=40,second=0)
-pulang = now.replace(hour=14,minute=0,second=0)
 
 for cl in myList:
     curImg = cv2.imread(f'{path}/{cl}')
@@ -41,10 +34,21 @@ def markAttendance(name):
             entry = line.split(',')
             nameList.append(entry[0])
         if name not in nameList:
+            pytz.timezone('Asia/Jakarta')
+            now = datetime.now()
+            tgl = now.strftime('%x')
+            dtString = now.strftime('%X')
+            hadir = now.replace(hour=7,minute=40,second=0)
+            pulang = now.replace(hour=14,minute=0,second=0)
+
             if (now <= hadir):
-                f.writelines(f'\n{tgl},{name},{dtString},0')
-            elif (now >= pulang):
                 f.writelines(f'\n{tgl},{name},0,{dtString}')
+            elif (now >= pulang):
+                with open('Attendance.csv','r') as f1:
+                    atd = f1.read()
+                atd = atd.replace(f'{tgl},{name},0',f'{tgl},{name},{dtString}')
+                with open('Attendance.csv','w') as f1:
+                    f1.write(atd)
 
 encodeListKnown = findEncodings(images)
 #print(len(encodeListKnown))
